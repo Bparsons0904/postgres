@@ -3,12 +3,6 @@ type: docker
 name: default
 
 steps:
-  - name: checkout
-    image: alpine:latest
-    commands:
-      - apk add --no-cache git
-      - git clone https://github.com/Bparsons0904/postgres.git .
-
   - name: deploy_staging
     image: docker/compose:1.29.2
     environment:
