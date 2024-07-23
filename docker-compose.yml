@@ -12,11 +12,11 @@ services:
     command: >
       bash -c "
       apt-get update && apt-get install -y gettext-base &&
-      envsubst < /docker-entrypoint-initdb.d/init_staging.sql.template > /docker-entrypoint-initdb.d/init.sql &&
+      envsubst < /docker-entrypoint-initdb.d/init_staging.sql.template > /docker-entrypoint-initdb.d/init_staging.sql &&
       docker-entrypoint.sh postgres
       "
     ports:
-      - "5076:5432"
+      - "5432:5432"
     restart: unless-stopped
 
   postgres_production:
@@ -32,11 +32,11 @@ services:
     command: >
       bash -c "
       apt-get update && apt-get install -y gettext-base &&
-      envsubst < /docker-entrypoint-initdb.d/init_production.sql.template > /docker-entrypoint-initdb.d/init.sql &&
+      envsubst < /docker-entrypoint-initdb.d/init_production.sql.template > /docker-entrypoint-initdb.d/init_production.sql &&
       docker-entrypoint.sh postgres
       "
     ports:
-      - "5432:5432"
+      - "5076:5432"
     restart: unless-stopped
 
 volumes:
