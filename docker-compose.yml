@@ -1,0 +1,32 @@
+services:
+  postgres_staging:
+    image: postgres:latest
+    container_name: postgres_staging
+    environment:
+      POSTGRES_USER: ${STAGING_DB_USER}
+      POSTGRES_PASSWORD: ${STAGING_DB_PASSWORD}
+      POSTGRES_DB: ${STAGING_DB_NAME}
+    volumes:
+      - postgres_staging_data:/var/lib/postgresql/data
+      - ./init_staging.sql:/docker-entrypoint-initdb.d/init.sql
+    ports:
+      - "5432:5432"
+    restart: unless-stopped
+
+  postgres_production:
+    image: postgres:latest
+    container_name: postgres_production
+    environment:
+      POSTGRES_USER: ${PROD_DB_USER}
+      POSTGRES_PASSWORD: ${PROD_DB_PASSWORD}
+      POSTGRES_DB: ${PROD_DB_NAME}
+    volumes:
+      - postgres_production_data:/var/lib/postgresql/data
+      - ./init_production.sql:/docker-entrypoint-initdb.d/init.sql
+    ports:
+      - "5076:5432"
+    restart: unless-stopped
+
+volumes:
+  postgres_staging_data:
+  postgres_production_data:
