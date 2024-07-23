@@ -8,11 +8,11 @@ services:
       POSTGRES_DB: ${STAGING_DB_NAME}
     volumes:
       - postgres_staging_data:/var/lib/postgresql/data
-      - ./init_staging.sql:/docker-entrypoint-initdb.d/init.sql
+      - ./init_staging.sql.template:/docker-entrypoint-initdb.d/init_staging.sql.template
     command: >
       bash -c "
       apt-get update && apt-get install -y gettext-base &&
-      envsubst < /docker-entrypoint-initdb.d/init.sql.template > /docker-entrypoint-initdb.d/init.sql &&
+      envsubst < /docker-entrypoint-initdb.d/init_staging.sql.template > /docker-entrypoint-initdb.d/init.sql &&
       docker-entrypoint.sh postgres
       "
     ports:
@@ -28,7 +28,13 @@ services:
       POSTGRES_DB: ${PROD_DB_NAME}
     volumes:
       - postgres_production_data:/var/lib/postgresql/data
-      - ./init_production.sql:/docker-entrypoint-initdb.d/init.sql
+      - ./init_production.sql.template:/docker-entrypoint-initdb.d/init_production.sql.template
+    command: >
+      bash -c "
+      apt-get update && apt-get install -y gettext-base &&
+      envsubst < /docker-entrypoint-initdb.d/init_production.sql.template > /docker-entrypoint-initdb.d/init.sql &&
+      docker-entrypoint.sh postgres
+      "
     ports:
       - "5076:5432"
     restart: unless-stopped

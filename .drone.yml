@@ -14,7 +14,7 @@ steps:
         from_secret: staging_db_name
     commands:
       - apk add --no-cache gettext
-      - sed -e "s/\${STAGING_DB_USER}/$STAGING_DB_USER/g" -e "s/\${STAGING_DB_PASSWORD}/$STAGING_DB_PASSWORD/g" -e "s/\${STAGING_DB_NAME}/$STAGING_DB_NAME/g" init_staging.sql.template > init_staging.sql
+      - envsubst < init_staging.sql.template > init_staging.sql
       - docker-compose stop postgres_staging
       - docker-compose rm -f postgres_staging
       - docker-compose up -d postgres_staging
@@ -33,7 +33,7 @@ steps:
       PROD_DB_NAME:
         from_secret: prod_db_name
     commands:
-      - envsubst < init_production.sql > init_production.sql
+      - envsubst < init_production.sql.template > init_production.sql
       - docker-compose stop postgres_production
       - docker-compose rm -f postgres_production
       - docker-compose up -d postgres_production
