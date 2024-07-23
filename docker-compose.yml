@@ -9,6 +9,12 @@ services:
     volumes:
       - postgres_staging_data:/var/lib/postgresql/data
       - ./init_staging.sql:/docker-entrypoint-initdb.d/init.sql
+    command: >
+      bash -c "
+      apt-get update && apt-get install -y gettext-base &&
+      envsubst < /docker-entrypoint-initdb.d/init.sql.template > /docker-entrypoint-initdb.d/init.sql &&
+      docker-entrypoint.sh postgres
+      "
     ports:
       - "5432:5432"
     restart: unless-stopped
