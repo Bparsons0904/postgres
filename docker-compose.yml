@@ -16,7 +16,7 @@ services:
       docker-entrypoint.sh postgres
       "
     ports:
-      - "5432:5432"
+      - "5076:5432"
     restart: unless-stopped
 
   postgres_production:
@@ -36,7 +36,7 @@ services:
       docker-entrypoint.sh postgres
       "
     ports:
-      - "5076:5432"
+      - "5432:5432"
     restart: unless-stopped
 
 volumes:
