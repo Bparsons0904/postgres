@@ -8,7 +8,7 @@ services:
       POSTGRES_DB: ${STAGING_DB_NAME}
     volumes:
       - postgres_staging_data:/var/lib/postgresql/data
-      - ./staging/postgresql.conf:/etc/postgresql/postgresql.conf
+      # - ./staging/postgresql.conf:/etc/postgresql/postgresql.conf
       - ./staging/pg_hba.conf:/etc/postgresql/pg_hba.conf
     ports:
       - "5080:5432"
@@ -24,7 +24,7 @@ services:
       POSTGRES_DB: ${PROD_DB_NAME}
     volumes:
       - postgres_production_data:/var/lib/postgresql/data
-      - ./production/postgresql.conf:/etc/postgresql/postgresql.conf
+      # - ./production/postgresql.conf:/etc/postgresql/postgresql.conf
       - ./production/pg_hba.conf:/etc/postgresql/pg_hba.conf
     ports:
       - "5076:5432"
