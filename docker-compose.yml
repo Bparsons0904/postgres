@@ -8,6 +8,8 @@ services:
       POSTGRES_DB: ${STAGING_DB_NAME}
     volumes:
       - postgres_staging_data:/var/lib/postgresql/data
+      - ./staging/postgresql.conf:/var/lib/postgresql/data/postgresql.conf
+      - ./staging/pg_hba.conf:/var/lib/postgresql/data/pg_hba.conf
     ports:
       - "5080:5432"
     restart: unless-stopped
@@ -21,6 +23,8 @@ services:
       POSTGRES_DB: ${PROD_DB_NAME}
     volumes:
       - postgres_production_data:/var/lib/postgresql/data
+      - ./production/postgresql.conf:/var/lib/postgresql/data/postgresql.conf
+      - ./production/pg_hba.conf:/var/lib/postgresql/data/pg_hba.conf
     ports:
       - "5076:5432"
     restart: unless-stopped
