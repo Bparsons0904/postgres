@@ -1,47 +1,63 @@
-# PostgreSQL Database Initialization and Deployment
+Here's an improved README for your repository:
 
-This README provides the steps to manually initialize PostgreSQL databases and manage the containers using Docker Compose and Drone CI.
+# PostgreSQL Database with UUID7 Extension
+
+This repository contains configuration for setting up and deploying PostgreSQL databases with the UUID7 extension using Docker, Docker Compose, and Drone CI.
+
+## Key Features
+
+- Custom PostgreSQL image with UUID7 extension
+- Separate staging and production environments
+- Automated deployment using Drone CI
+- Docker Compose for local development and testing
 
 ## Prerequisites
 
-- Docker
-- Docker Compose
-- PostgreSQL client (psql)
-- Drone CI
+- Docker and Docker Compose
+- Drone CI server (for automated deployments)
 
-## Step 1: Start PostgreSQL Containers Without Initialization Scripts
+## Quick Start
 
-1. Modify the `docker-compose.yml` to start the PostgreSQL containers without the initialization scripts.
+1. Clone this repository
+2. Set up your environment variables (see "Environment Variables" section)
+3. Run `docker-compose up -d` to start the databases locally
 
-   ```yaml
-   services:
-     postgres_staging:
-       image: postgres:latest
-       container_name: postgres_staging
-       environment:
-         POSTGRES_USER: ${STAGING_DB_USER}
-         POSTGRES_PASSWORD: ${STAGING_DB_PASSWORD}
-         POSTGRES_DB: ${STAGING_DB_NAME}
-       volumes:
-         - postgres_staging_data:/var/lib/postgresql/data
-       ports:
-         - "5432:5432"
-       restart: unless-stopped
+## Environment Variables
 
-     postgres_production:
-       image: postgres:latest
-       container_name: postgres_production
-       environment:
-         POSTGRES_USER: ${PROD_DB_USER}
-         POSTGRES_PASSWORD: ${PROD_DB_PASSWORD}
-         POSTGRES_DB: ${PROD_DB_NAME}
-       volumes:
-         - postgres_production_data:/var/lib/postgresql/data
-       ports:
-         - "5076:5432"
-       restart: unless-stopped
+The following environment variables need to be set in your Drone CI secrets:
 
-   volumes:
-     postgres_staging_data:
-     postgres_production_data:
-   ```
+- `STAGING_DB_USER`: Username for staging database
+- `STAGING_DB_PASSWORD`: Password for staging database
+- `STAGING_DB_NAME`: Name of staging database
+- `PROD_DB_USER`: Username for production database
+- `PROD_DB_PASSWORD`: Password for production database
+- `PROD_DB_NAME`: Name of production database
+
+## Deployment
+
+Deployment is handled automatically by Drone CI:
+
+- Pushing to the `main` branch triggers a deployment to the staging environment
+- Creating a new tag (e.g., `v1.0.0`) triggers a deployment to the production environment
+
+## Custom PostgreSQL Image
+
+The custom PostgreSQL image includes the UUID7 extension. The Dockerfile for this image is included in this repository.
+
+## Database Initialization
+
+Database extensions are automatically initialized using the `init-extentions.sql` script, which is copied into the Docker image.
+
+## Local Development
+
+Use `docker-compose up -d` to start the databases locally. The staging database will be available on port 5080, and the production database on port 5076.
+
+## Contributing
+
+Please read CONTRIBUTING.md for details on our code of conduct and the process for submitting pull requests.
+
+## License
+
+This project is licensed under the MIT License - see the LICENSE.md file for details.
+
+Would you like me to modify or expand on any part of this README?
