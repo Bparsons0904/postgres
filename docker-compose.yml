@@ -1,6 +1,7 @@
 services:
   postgres_staging:
     build: .
+    image: custom-postgres
     container_name: postgres_staging
     environment:
       POSTGRES_USER: ${STAGING_DB_USER}
@@ -14,6 +15,7 @@ services:
 
   postgres_production:
     build: .
+    image: custom-postgres
     container_name: postgres_production
     environment:
       POSTGRES_USER: ${PROD_DB_USER}
