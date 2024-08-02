@@ -17,4 +17,4 @@ RUN apt-get remove -y build-essential curl && \
     apt-get autoremove -y && \
     rm -rf /var/lib/apt/lists/*
 
-COPY init-extension.sql /docker-entrypoint-initdb.d/
+COPY init-extensions.sql /docker-entrypoint-initdb.d/
