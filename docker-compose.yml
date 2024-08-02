@@ -1,6 +1,6 @@
 services:
   postgres_staging:
-    image: postgres:latest
+    image: custom-postgres
     container_name: postgres_staging
     environment:
       POSTGRES_USER: ${STAGING_DB_USER}
@@ -13,7 +13,7 @@ services:
     restart: unless-stopped
 
   postgres_production:
-    image: postgres:latest
+    image: custom-postgres
     container_name: postgres_production
     environment:
       POSTGRES_USER: ${PROD_DB_USER}

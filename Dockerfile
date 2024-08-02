@@ -2,21 +2,19 @@ FROM postgres:latest
 
 RUN apt-get update && apt-get install -y \
     build-essential \
-    postgresql-server-dev-all \
-    git \
-    openssh-client
+    curl \
+    libpq-dev \
+    postgresql-server-dev-all
 
-RUN mkdir -p /root/.ssh && chmod 0700 /root/.ssh
-
-RUN ssh-keyscan -H github.com >> /root/.ssh/known_hosts
-
-ENV DOCKER_BUILDKIT=1
-
-RUN --mount=type=ssh git clone git@github.com:mitchellh/pg-uuidv7.git /tmp/pg-uuidv7 && \
-    cd /tmp/pg-uuidv7 && \
+RUN cd "$(mktemp -d)" && \
+    curl -LO "https://github.com/fboulnois/pg_uuidv7/archive/refs/tags/v1.5.0.tar.gz" && \
+    tar xzf v1.5.0.tar.gz && \
+    cd pg_uuidv7-1.5.0 && \
     make && \
     make install
 
-RUN apt-get remove -y build-essential git && \
+RUN apt-get remove -y build-essential curl && \
     apt-get autoremove -y && \
-    rm -rf /var/lib/apt/lists/* /tmp/pg-uuidv7
+    rm -rf /var/lib/apt/lists/*
+
+COPY init-extension.sql /docker-entrypoint-initdb.d/
