@@ -7,8 +7,8 @@ steps:
     image: docker:20.10.7
     environment:
       SSH_AUTH_SOCK: /tmp/ssh-agent.sock
-    secrets:
-      - SSH_KEY
+      SSH_KEY:
+        from_secret: SSH_KEY
     commands:
       - apk add --no-cache openssh-client
       - eval $(ssh-agent -a /tmp/ssh-agent.sock)
