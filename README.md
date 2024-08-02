@@ -1,5 +1,3 @@
-Here's an improved README for your repository:
-
 # PostgreSQL Database with UUID7 Extension
 
 This repository contains configuration for setting up and deploying PostgreSQL databases with the UUID7 extension using Docker, Docker Compose, and Drone CI.
@@ -59,5 +57,3 @@ Please read CONTRIBUTING.md for details on our code of conduct and the process f
 ## License
 
 This project is licensed under the MIT License - see the LICENSE.md file for details.
-
-Would you like me to modify or expand on any part of this README?
