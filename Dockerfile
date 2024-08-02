@@ -1,4 +1,4 @@
-FROM postgres:16
+FROM postgres:latest
 
 RUN apt-get update && apt-get install -y \
     build-essential \
@@ -6,13 +6,13 @@ RUN apt-get update && apt-get install -y \
     git \
     openssh-client
 
-COPY ./id_rsa /root/.ssh/id_rsa
-COPY ./id_rsa.pub /root/.ssh/id_rsa.pub
-RUN chmod 600 /root/.ssh/id_rsa
+RUN mkdir -p /root/.ssh && chmod 0700 /root/.ssh
 
-RUN ssh-keyscan github.com >> /root/.ssh/known_hosts
+RUN ssh-keyscan -H github.com >> /root/.ssh/known_hosts
 
-RUN git clone git@github.com:mitchellh/pg-uuidv7.git /tmp/pg-uuidv7 && \
+ENV DOCKER_BUILDKIT=1
+
+RUN --mount=type=ssh git clone git@github.com:mitchellh/pg-uuidv7.git /tmp/pg-uuidv7 && \
     cd /tmp/pg-uuidv7 && \
     make && \
     make install
