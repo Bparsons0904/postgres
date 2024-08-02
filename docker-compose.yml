@@ -1,6 +1,8 @@
 services:
   postgres_staging:
-    image: postgres:latest
+    build:
+      context: .
+      dockerfile: Dockerfile
     container_name: postgres_staging
     environment:
       POSTGRES_USER: ${STAGING_DB_USER}
@@ -8,12 +10,15 @@ services:
       POSTGRES_DB: ${STAGING_DB_NAME}
     volumes:
       - postgres_staging_data:/var/lib/postgresql/data
+      - ./init-extensions.sql:/docker-entrypoint-initdb.d/init-extensions.sql
     ports:
       - "5080:5432"
     restart: unless-stopped
 
   postgres_production:
-    image: postgres:latest
+    build:
+      context: .
+      dockerfile: Dockerfile
     container_name: postgres_production
     environment:
       POSTGRES_USER: ${PROD_DB_USER}
@@ -21,6 +26,7 @@ services:
       POSTGRES_DB: ${PROD_DB_NAME}
     volumes:
       - postgres_production_data:/var/lib/postgresql/data
+      - ./init-extensions.sql:/docker-entrypoint-initdb.d/init-extensions.sql
     ports:
       - "5076:5432"
     restart: unless-stopped
