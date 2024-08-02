@@ -49,11 +49,3 @@ Database extensions are automatically initialized using the `init-extentions.sql
 ## Local Development
 
 Use `docker-compose up -d` to start the databases locally. The staging database will be available on port 5080, and the production database on port 5076.
-
-## Contributing
-
-Please read CONTRIBUTING.md for details on our code of conduct and the process for submitting pull requests.
-
-## License
-
-This project is licensed under the MIT License - see the LICENSE.md file for details.
