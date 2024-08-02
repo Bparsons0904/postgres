@@ -3,6 +3,18 @@ type: docker
 name: default
 
 steps:
+  - name: build_postgres_image
+    image: docker:20.10.7
+    environment:
+      SSH_AUTH_SOCK: /tmp/ssh-agent.sock
+    commands:
+      - apk add --no-cache openssh-client
+      - eval $(ssh-agent -a /tmp/ssh-agent.sock)
+      - echo "$SSH_KEY" | ssh-add -
+      - mkdir -p ~/.ssh
+      - ssh-keyscan -H github.com >> ~/.ssh/known_hosts
+      - DOCKER_BUILDKIT=1 docker build --ssh default -t custom-postgres .
+
   - name: deploy_staging
     image: docker/compose:1.29.2
     environment:
