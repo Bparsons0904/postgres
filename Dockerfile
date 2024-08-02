@@ -3,9 +3,16 @@ FROM postgres:16
 RUN apt-get update && apt-get install -y \
     build-essential \
     postgresql-server-dev-all \
-    git
+    git \
+    openssh-client
 
-RUN git clone https://github.com/mitchellh/pg-uuidv7.git /tmp/pg-uuidv7 && \
+COPY ./id_rsa /root/.ssh/id_rsa
+COPY ./id_rsa.pub /root/.ssh/id_rsa.pub
+RUN chmod 600 /root/.ssh/id_rsa
+
+RUN ssh-keyscan github.com >> /root/.ssh/known_hosts
+
+RUN git clone git@github.com:mitchellh/pg-uuidv7.git /tmp/pg-uuidv7 && \
     cd /tmp/pg-uuidv7 && \
     make && \
     make install
