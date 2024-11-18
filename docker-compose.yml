@@ -38,6 +38,29 @@ services:
         reservations:
           memory: 2G
           cpus: "2"
+  postgres_exporter_staging:
+    image: prometheuscommunity/postgres-exporter:latest
+    container_name: postgres_exporter_staging
+    environment:
+      DATA_SOURCE_NAME: "postgresql://${STAGING_DB_USER}:${STAGING_DB_PASSWORD}@postgres_staging:5432/${STAGING_DB_NAME}?sslmode=disable"
+    ports:
+      - "9187:9187"
+    restart: unless-stopped
+    networks:
+      - switch-network
+    depends_on:
+      - postgres_staging
+    labels:
+      - "com.docker.stack.namespace=staging"
+      - "com.docker.stack.monitoring=true"
+    deploy:
+      resources:
+        limits:
+          memory: 256M
+          cpus: "0.5"
+        reservations:
+          memory: 128M
+          cpus: "0.1"
   postgres_production:
     build:
       context: .
@@ -73,6 +96,29 @@ services:
         reservations:
           memory: 2G
           cpus: "2"
+  postgres_exporter_production:
+    image: prometheuscommunity/postgres-exporter:latest
+    container_name: postgres_exporter_production
+    environment:
+      DATA_SOURCE_NAME: "postgresql://${PROD_DB_USER}:${PROD_DB_PASSWORD}@postgres_production:5432/${PROD_DB_NAME}?sslmode=disable"
+    ports:
+      - "9188:9187"
+    restart: unless-stopped
+    networks:
+      - switch-network
+    depends_on:
+      - postgres_production
+    labels:
+      - "com.docker.stack.namespace=production"
+      - "com.docker.stack.monitoring=true"
+    deploy:
+      resources:
+        limits:
+          memory: 256M
+          cpus: "0.5"
+        reservations:
+          memory: 128M
+          cpus: "0.1"
 volumes:
   postgres_staging_data:
     driver: local
