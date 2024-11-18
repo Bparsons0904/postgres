@@ -4,3 +4,5 @@ CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
 CREATE EXTENSION IF NOT EXISTS "pg_uuidv7";
 \echo 'pg_uuidv7 extension created'
 \echo 'Initialization script completed'
+-- init-extensions.sql
+CREATE EXTENSION IF NOT EXISTS pg_stat_statements;

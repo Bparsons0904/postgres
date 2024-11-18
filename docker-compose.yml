@@ -27,6 +27,9 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
+    labels:
+      - "com.docker.stack.namespace=staging"
+      - "com.docker.stack.monitoring=true"
     deploy:
       resources:
         limits:
