@@ -1,5 +1,5 @@
 # Option 1: Remove the COPY for postgresql.conf from Dockerfile
-FROM postgres:17.1-bookworm
+FROM postgres:16.5-bookworm
 
 RUN apt-get update && apt-get install -y \
   build-essential \
