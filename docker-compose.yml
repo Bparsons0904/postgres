@@ -1,32 +1,81 @@
+version: "3.8"
 services:
   postgres_staging:
-    build: .
-    image: custom-postgres
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: custom-postgres:17.1
     container_name: postgres_staging
     environment:
       POSTGRES_USER: ${STAGING_DB_USER}
       POSTGRES_PASSWORD: ${STAGING_DB_PASSWORD}
       POSTGRES_DB: ${STAGING_DB_NAME}
+      POSTGRES_INITDB_ARGS: "--auth-host=scram-sha-256"
+      POSTGRES_HOST_AUTH_METHOD: "scram-sha-256"
     volumes:
       - postgres_staging_data:/var/lib/postgresql/data
+      - ./staging/postgresql.conf:/etc/postgresql/postgresql.conf:ro
+      - ./staging/pg_hba.conf:/etc/postgresql/pg_hba.conf:ro
+      - ./init_staging.sql.template:/docker-entrypoint-initdb.d/init.sql:ro
     ports:
       - "5080:5432"
     restart: unless-stopped
-
+    networks:
+      - switch-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${STAGING_DB_USER} -d ${STAGING_DB_NAME}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    deploy:
+      resources:
+        limits:
+          memory: 6G
+          cpus: "4"
+        reservations:
+          memory: 2G
+          cpus: "2"
   postgres_production:
-    build: .
-    image: custom-postgres
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: custom-postgres:17.1
     container_name: postgres_production
     environment:
       POSTGRES_USER: ${PROD_DB_USER}
       POSTGRES_PASSWORD: ${PROD_DB_PASSWORD}
       POSTGRES_DB: ${PROD_DB_NAME}
+      POSTGRES_INITDB_ARGS: "--auth-host=scram-sha-256"
+      POSTGRES_HOST_AUTH_METHOD: "scram-sha-256"
     volumes:
       - postgres_production_data:/var/lib/postgresql/data
+      - ./production/postgresql.conf:/etc/postgresql/postgresql.conf:ro
+      - ./production/pg_hba.conf:/etc/postgresql/pg_hba.conf:ro
+      - ./init_production.sql.template:/docker-entrypoint-initdb.d/init.sql:ro
     ports:
       - "5076:5432"
     restart: unless-stopped
-
+    networks:
+      - switch-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${PROD_DB_USER} -d ${PROD_DB_NAME}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    deploy:
+      resources:
+        limits:
+          memory: 6G
+          cpus: "4"
+        reservations:
+          memory: 2G
+          cpus: "2"
 volumes:
   postgres_staging_data:
+    driver: local
   postgres_production_data:
+    driver: local
+networks:
+  switch-network:
+    external: true
+    name: switch-network
