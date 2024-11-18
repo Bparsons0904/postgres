@@ -1,3 +1,4 @@
+# Option 1: Remove the COPY for postgresql.conf from Dockerfile
 FROM postgres:17.1-bookworm
 
 RUN apt-get update && apt-get install -y \
@@ -19,6 +20,3 @@ RUN apt-get update && apt-get install -y \
 COPY init-extensions.sql /docker-entrypoint-initdb.d/
 COPY init-db.sh /docker-entrypoint-initdb.d/
 RUN chmod +x /docker-entrypoint-initdb.d/init-db.sh
-
-COPY postgresql.conf /etc/postgresql/postgresql.conf
-CMD ["postgres", "-c", "config_file=/etc/postgresql/postgresql.conf"]
