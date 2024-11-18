@@ -1,13 +1,11 @@
 kind: pipeline
 type: docker
 name: default
-
 steps:
   - name: build_postgres_image
     image: docker:20.10.7
     commands:
-      - docker build -t custom-postgres .
-
+      - docker build -t custom-postgres:16.5 .
   - name: deploy_staging
     image: docker/compose:1.29.2
     environment:
@@ -18,14 +16,13 @@ steps:
       STAGING_DB_NAME:
         from_secret: staging_db_name
     commands:
-      - docker-compose stop postgres_staging
-      - docker-compose rm -f postgres_staging
-      - docker-compose up -d postgres_staging
+      - docker-compose stop postgres_staging postgres_exporter_staging
+      - docker-compose rm -f postgres_staging postgres_exporter_staging
+      - docker-compose up -d postgres_staging postgres_exporter_staging
       - docker image prune -f
     when:
       branch:
         - main
-
   - name: deploy_production
     image: docker/compose:1.29.2
     environment:
@@ -36,9 +33,9 @@ steps:
       PROD_DB_NAME:
         from_secret: prod_db_name
     commands:
-      - docker-compose stop postgres_production
-      - docker-compose rm -f postgres_production
-      - docker-compose up -d postgres_production
+      - docker-compose stop postgres_production postgres_exporter_production
+      - docker-compose rm -f postgres_production postgres_exporter_production
+      - docker-compose up -d postgres_production postgres_exporter_production
       - docker image prune -f
     when:
       event:
