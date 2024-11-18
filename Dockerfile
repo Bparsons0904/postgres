@@ -1,4 +1,3 @@
-# Option 1: Remove the COPY for postgresql.conf from Dockerfile
 FROM postgres:16.5-bookworm
 
 RUN apt-get update && apt-get install -y \

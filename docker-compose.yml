@@ -4,7 +4,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    image: custom-postgres:17.1
+    image: custom-postgres:16.5
     container_name: postgres_staging
     environment:
       POSTGRES_USER: ${STAGING_DB_USER}
@@ -42,7 +42,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    image: custom-postgres:17.1
+    image: custom-postgres:16.5
     container_name: postgres_production
     environment:
       POSTGRES_USER: ${PROD_DB_USER}
