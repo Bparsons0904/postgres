@@ -1,33 +1,12 @@
 pg_stat_statements_metrics:
-  query: "SELECT \n  queryid,\n  calls,\n  total_exec_time as total_time_ms,\n  mean_exec_time as mean_time_ms,\n  rows,\n  shared_blks_hit,\n  shared_blks_read,\n  shared_blks_dirtied,\n  shared_blks_written,\n  LEFT(query, 50) as query\nFROM pg_stat_statements\nWHERE dbid = (SELECT oid FROM pg_database WHERE datname = current_database())\n"
+  query: "SELECT calls, total_exec_time as total_time_ms, query \nFROM pg_stat_statements \nLIMIT 1\n"
   metrics:
-    - queryid:
-        usage: "LABEL"
-        description: "Query identifier"
     - calls:
         usage: "COUNTER"
         description: "Number of times executed"
     - total_time_ms:
         usage: "COUNTER"
-        description: "Total time spent in the statement, in milliseconds"
-    - mean_time_ms:
-        usage: "GAUGE"
-        description: "Mean time spent in the statement, in milliseconds"
-    - rows:
-        usage: "COUNTER"
-        description: "Total number of rows retrieved or affected"
-    - shared_blks_hit:
-        usage: "COUNTER"
-        description: "Total number of shared block cache hits"
-    - shared_blks_read:
-        usage: "COUNTER"
-        description: "Total number of shared blocks read"
-    - shared_blks_dirtied:
-        usage: "COUNTER"
-        description: "Total number of shared blocks dirtied"
-    - shared_blks_written:
-        usage: "COUNTER"
-        description: "Total number of shared blocks written"
+        description: "Total time spent in the statement"
     - query:
         usage: "LABEL"
         description: "Query text"
