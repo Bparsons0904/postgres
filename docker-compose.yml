@@ -42,7 +42,11 @@ services:
     image: prometheuscommunity/postgres-exporter:latest
     container_name: postgres_exporter_staging
     environment:
-      DATA_SOURCE_NAME: "postgresql://${STAGING_DB_USER}:${STAGING_DB_PASSWORD}@postgres_staging:5432/${STAGING_DB_NAME}?sslmode=disable"
+      POSTGRES_USER: ${STAGING_DB_USER}
+      POSTGRES_PASS: ${STAGING_DB_PASSWORD}
+      POSTGRES_HOST: postgres_staging
+      POSTGRES_PORT: "5432"
+      POSTGRES_DATABASE: ${STAGING_DB_NAME}
       DEBUG: "1"
       PG_EXPORTER_LOG_FORMAT: "json"
     ports:
