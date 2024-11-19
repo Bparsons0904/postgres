@@ -1,0 +1,5 @@
+FROM prometheuscommunity/postgres-exporter:latest
+
+RUN mkdir -p /etc/postgres_exporter/conf/
+
+COPY postgres_exporter_config/queries.yaml /etc/postgres_exporter/conf/queries.yaml

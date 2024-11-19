@@ -6,6 +6,7 @@ steps:
     image: docker:20.10.7
     commands:
       - docker build -t custom-postgres:16.5 .
+      - docker build -t postgres-exporter:latest -f Dockerfile.exporter .
   - name: deploy_staging
     image: docker/compose:1.29.2
     environment:
@@ -19,7 +20,6 @@ steps:
       - docker-compose stop postgres_staging postgres_exporter_staging
       - docker-compose rm -f postgres_staging postgres_exporter_staging
       - docker-compose up -d postgres_staging postgres_exporter_staging
-      - docker image prune -f
     when:
       branch:
         - main
