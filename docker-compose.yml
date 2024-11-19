@@ -6,6 +6,7 @@ services:
       dockerfile: Dockerfile
     image: custom-postgres:16.5
     container_name: postgres_staging
+    command: postgres -c 'config_file=/etc/postgresql/postgresql.conf'
     environment:
       POSTGRES_USER: ${STAGING_DB_USER}
       POSTGRES_PASSWORD: ${STAGING_DB_PASSWORD}
