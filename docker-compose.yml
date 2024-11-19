@@ -100,6 +100,7 @@ services:
     container_name: postgres_exporter_production
     environment:
       DATA_SOURCE_NAME: "postgresql://${PROD_DB_USER}:${PROD_DB_PASSWORD}@postgres_production:5432/${PROD_DB_NAME}?sslmode=disable"
+      PG_EXPORTER_EXTEND_QUERY_PATH: "/etc/postgres_exporter/conf/queries.yaml"
     ports:
       - "9188:9187"
     restart: unless-stopped
