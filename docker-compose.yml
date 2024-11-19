@@ -42,15 +42,14 @@ services:
     image: prometheuscommunity/postgres-exporter:latest
     container_name: postgres_exporter_staging
     environment:
-      POSTGRES_USER: ${STAGING_DB_USER}
-      POSTGRES_PASS: ${STAGING_DB_PASSWORD}
-      POSTGRES_HOST: postgres_staging
-      POSTGRES_PORT: "5432"
-      POSTGRES_DATABASE: ${STAGING_DB_NAME}
-      DEBUG: "1"
-      PG_EXPORTER_LOG_FORMAT: "json"
+      DATA_SOURCE_URI: "postgres_staging:5432/${STAGING_DB_NAME}"
+      DATA_SOURCE_USER: ${STAGING_DB_USER}
+      DATA_SOURCE_PASS: ${STAGING_DB_PASSWORD}
+      PG_EXPORTER_EXTEND_QUERY_PATH: "/etc/postgres_exporter/queries.yaml"
     ports:
       - "9187:9187"
+    volumes:
+      - ./postgres_exporter/queries.yaml:/etc/postgres_exporter/queries.yaml:ro
     restart: unless-stopped
     networks:
       - switch-network
