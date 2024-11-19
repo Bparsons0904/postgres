@@ -5,7 +5,10 @@ USER root
 RUN mkdir -p /etc/postgres_exporter/conf/ && \
   chown -R nobody:nobody /etc/postgres_exporter
 
-COPY postgres_exporter_config/queries.yaml /etc/postgres_exporter/conf/queries.yaml
-RUN chown nobody:nobody /etc/postgres_exporter/conf/queries.yaml
+COPY postgres_exporter/conf/queries.yaml /etc/postgres_exporter/conf/queries.yaml
+RUN chown nobody:nobody /etc/postgres_exporter/conf/queries.yaml && \
+  ls -la /etc/postgres_exporter/conf/
 
 USER nobody
+
+CMD ["--extend.query-path", "/etc/postgres_exporter/conf/queries.yaml"]
