@@ -12,6 +12,12 @@ services:
       POSTGRES_DB: ${STAGING_DB_NAME}
       POSTGRES_INITDB_ARGS: "--auth-host=scram-sha-256"
       POSTGRES_HOST_AUTH_METHOD: "scram-sha-256"
+      POSTGRES_LOGGING_COLLECTOR: "on"
+      POSTGRES_LOG_STATEMENT: "all" # Log all statements
+      POSTGRES_LOG_CONNECTIONS: "on"
+      POSTGRES_LOG_DISCONNECTIONS: "on"
+      POSTGRES_LOG_MIN_DURATION_STATEMENT: "0" # Log all queries
+      POSTGRES_LOG_LINE_PREFIX: "%t [%p]: [%l-1] user=%u,db=%d,app=%a,client=%h "
     volumes:
       - postgres_staging_data:/var/lib/postgresql/data
     ports:
@@ -27,7 +33,7 @@ services:
     labels:
       - "com.docker.stack.namespace=staging"
       - "com.docker.stack.monitoring=true"
-    deploy: &deploy-db
+    deploy:
       resources:
         limits:
           memory: 6G
@@ -42,6 +48,11 @@ services:
     container_name: postgres_exporter_staging
     environment:
       DATA_SOURCE_NAME: "postgresql://${STAGING_DB_USER}:${STAGING_DB_PASSWORD}@postgres_staging:5432/${STAGING_DB_NAME}?sslmode=disable"
+      DEBUG: "1"
+      POSTGRES_EXPORTER_LOG_LEVEL: "debug"
+    command:
+      - "--extend.query-path=/etc/postgres_exporter/conf/queries.yaml"
+      - "--log.level=debug"
     ports:
       - "9187:9187"
     restart: unless-stopped
