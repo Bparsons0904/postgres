@@ -1,41 +1,33 @@
-pg_stat_statements:
-  query: |
-    SELECT queryid, query, calls, total_exec_time / 1000 as total_exec_time_ms,
-           min_exec_time / 1000 as min_exec_time_ms,
-           max_exec_time / 1000 as max_exec_time_ms,
-           mean_exec_time / 1000 as mean_exec_time_ms,
-           rows
-    FROM pg_stat_statements
+pg_stat_statements_metrics:
+  query: "SELECT \n  queryid,\n  calls,\n  total_exec_time as total_time_ms,\n  mean_exec_time as mean_time_ms,\n  rows,\n  shared_blks_hit,\n  shared_blks_read,\n  shared_blks_dirtied,\n  shared_blks_written,\n  LEFT(query, 50) as query\nFROM pg_stat_statements\nWHERE dbid = (SELECT oid FROM pg_database WHERE datname = current_database())\n"
   metrics:
     - queryid:
         usage: "LABEL"
-        description: "Query ID"
+        description: "Query identifier"
     - calls:
         usage: "COUNTER"
         description: "Number of times executed"
-    - total_exec_time_ms:
+    - total_time_ms:
         usage: "COUNTER"
-        description: "Total time spent in the statement in milliseconds"
-    - min_exec_time_ms:
+        description: "Total time spent in the statement, in milliseconds"
+    - mean_time_ms:
         usage: "GAUGE"
-        description: "Minimum time spent in the statement in milliseconds"
-    - max_exec_time_ms:
-        usage: "GAUGE"
-        description: "Maximum time spent in the statement in milliseconds"
-    - mean_exec_time_ms:
-        usage: "GAUGE"
-        description: "Mean time spent in the statement in milliseconds"
+        description: "Mean time spent in the statement, in milliseconds"
     - rows:
         usage: "COUNTER"
         description: "Total number of rows retrieved or affected"
-pg_database_size:
-  query: |
-    SELECT datname, pg_database_size(datname) as size_bytes
-    FROM pg_database
-  metrics:
-    - datname:
+    - shared_blks_hit:
+        usage: "COUNTER"
+        description: "Total number of shared block cache hits"
+    - shared_blks_read:
+        usage: "COUNTER"
+        description: "Total number of shared blocks read"
+    - shared_blks_dirtied:
+        usage: "COUNTER"
+        description: "Total number of shared blocks dirtied"
+    - shared_blks_written:
+        usage: "COUNTER"
+        description: "Total number of shared blocks written"
+    - query:
         usage: "LABEL"
-        description: "Name of the database"
-    - size_bytes:
-        usage: "GAUGE"
-        description: "Disk space used by the database"
+        description: "Query text"
