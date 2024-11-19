@@ -45,7 +45,7 @@ services:
       DATA_SOURCE_URI: "postgres_staging:5432/${STAGING_DB_NAME}?sslmode=disable"
       DATA_SOURCE_USER: ${STAGING_DB_USER}
       DATA_SOURCE_PASS: ${STAGING_DB_PASSWORD}
-      PG_EXPORTER_EXTEND_QUERY_PATH: "/etc/postgres_exporter/conf/queries.yaml"
+      PG_EXPORTER_EXTEND_QUERY_PATH: "/home/nobody/conf/queries.yaml"
     ports:
       - "9187:9187"
     restart: unless-stopped

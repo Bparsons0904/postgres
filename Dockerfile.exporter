@@ -1,5 +1,11 @@
 FROM prometheuscommunity/postgres-exporter:latest
 
-RUN mkdir -p /etc/postgres_exporter/conf/
+USER root
+
+RUN mkdir -p /etc/postgres_exporter/conf/ && \
+  chown -R nobody:nobody /etc/postgres_exporter
 
 COPY postgres_exporter_config/queries.yaml /etc/postgres_exporter/conf/queries.yaml
+RUN chown nobody:nobody /etc/postgres_exporter/conf/queries.yaml
+
+USER nobody
