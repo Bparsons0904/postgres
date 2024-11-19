@@ -15,8 +15,6 @@ services:
       POSTGRES_HOST_AUTH_METHOD: "scram-sha-256"
     volumes:
       - postgres_staging_data:/var/lib/postgresql/data
-      - ./staging/postgresql.conf:/var/lib/postgresql/config/postgresql.conf:ro
-      - ./staging/pg_hba.conf:/var/lib/postgresql/config/pg_hba.conf:ro
     ports:
       - "5080:5432"
     restart: unless-stopped
