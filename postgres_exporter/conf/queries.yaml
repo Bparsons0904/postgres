@@ -1,12 +1,12 @@
 pg_stat_statements_metrics:
-  query: "SELECT calls, total_exec_time as total_time_ms, query \nFROM pg_stat_statements \nLIMIT 1\n"
+  query: "DO $$\nBEGIN\n  RAISE NOTICE 'Starting pg_stat_statements query';\n  PERFORM query, calls, total_exec_time\n  FROM pg_stat_statements\n  WHERE total_exec_time > 0;\n  RAISE NOTICE 'Query completed successfully';\nEXCEPTION WHEN OTHERS THEN\n  RAISE NOTICE 'Error executing query: %', SQLERRM;\nEND $$;\nSELECT \n  query,\n  calls,\n  total_exec_time as total_time_ms\nFROM pg_stat_statements\nWHERE total_exec_time > 0;\n"
   metrics:
+    - query:
+        usage: "LABEL"
+        description: "Query text"
     - calls:
         usage: "COUNTER"
         description: "Number of times executed"
     - total_time_ms:
         usage: "COUNTER"
-        description: "Total time spent in the statement"
-    - query:
-        usage: "LABEL"
-        description: "Query text"
+        description: "Total time spent in the statement, in milliseconds"
