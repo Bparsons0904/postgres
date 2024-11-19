@@ -1,72 +1,41 @@
-pg_replication:
-  query: "SELECT CASE WHEN NOT pg_is_in_recovery() THEN 0 ELSE GREATEST (0, EXTRACT(EPOCH FROM (now() - pg_last_xact_replay_timestamp()))) END AS lag"
-  metrics:
-    - lag:
-        usage: "GAUGE"
-        description: "Replication lag behind master in seconds"
-pg_stat_user_tables:
+pg_stat_statements:
   query: |
-    SELECT
-      schemaname,
-      relname,
-      seq_scan,
-      seq_tup_read,
-      idx_scan,
-      idx_tup_fetch,
-      n_tup_ins,
-      n_tup_upd,
-      n_tup_del,
-      n_tup_hot_upd,
-      n_live_tup,
-      n_dead_tup,
-      n_mod_since_analyze,
-      COALESCE(last_vacuum, '1970-01-01Z') as last_vacuum,
-      COALESCE(last_autovacuum, '1970-01-01Z') as last_autovacuum,
-      COALESCE(last_analyze, '1970-01-01Z') as last_analyze,
-      COALESCE(last_autoanalyze, '1970-01-01Z') as last_autoanalyze,
-      vacuum_count,
-      autovacuum_count,
-      analyze_count,
-      autoanalyze_count
-    FROM
-      pg_stat_user_tables
+    SELECT queryid, query, calls, total_exec_time / 1000 as total_exec_time_ms,
+           min_exec_time / 1000 as min_exec_time_ms,
+           max_exec_time / 1000 as max_exec_time_ms,
+           mean_exec_time / 1000 as mean_exec_time_ms,
+           rows
+    FROM pg_stat_statements
   metrics:
-    - schemaname:
+    - queryid:
         usage: "LABEL"
-        description: "Schema name"
-    - relname:
+        description: "Query ID"
+    - calls:
+        usage: "COUNTER"
+        description: "Number of times executed"
+    - total_exec_time_ms:
+        usage: "COUNTER"
+        description: "Total time spent in the statement in milliseconds"
+    - min_exec_time_ms:
+        usage: "GAUGE"
+        description: "Minimum time spent in the statement in milliseconds"
+    - max_exec_time_ms:
+        usage: "GAUGE"
+        description: "Maximum time spent in the statement in milliseconds"
+    - mean_exec_time_ms:
+        usage: "GAUGE"
+        description: "Mean time spent in the statement in milliseconds"
+    - rows:
+        usage: "COUNTER"
+        description: "Total number of rows retrieved or affected"
+pg_database_size:
+  query: |
+    SELECT datname, pg_database_size(datname) as size_bytes
+    FROM pg_database
+  metrics:
+    - datname:
         usage: "LABEL"
-        description: "Table name"
-    - seq_scan:
-        usage: "COUNTER"
-        description: "Number of sequential scans initiated on this table"
-    - seq_tup_read:
-        usage: "COUNTER"
-        description: "Number of live rows fetched by sequential scans"
-    - idx_scan:
-        usage: "COUNTER"
-        description: "Number of index scans initiated on this table"
-    - idx_tup_fetch:
-        usage: "COUNTER"
-        description: "Number of live rows fetched by index scans"
-    - n_tup_ins:
-        usage: "COUNTER"
-        description: "Number of rows inserted"
-    - n_tup_upd:
-        usage: "COUNTER"
-        description: "Number of rows updated"
-    - n_tup_del:
-        usage: "COUNTER"
-        description: "Number of rows deleted"
-    - n_tup_hot_upd:
-        usage: "COUNTER"
-        description: "Number of rows HOT updated"
-    - n_live_tup:
+        description: "Name of the database"
+    - size_bytes:
         usage: "GAUGE"
-        description: "Estimated number of live rows"
-    - n_dead_tup:
-        usage: "GAUGE"
-        description: "Estimated number of dead rows"
-    - n_mod_since_analyze:
-        usage: "GAUGE"
-        description: "Estimated number of rows modified since this table was last analyzed"
+        description: "Disk space used by the database"
