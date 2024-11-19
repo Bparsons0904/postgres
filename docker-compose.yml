@@ -1,4 +1,3 @@
-version: "3.8"
 services:
   postgres_staging:
     build:
@@ -28,7 +27,7 @@ services:
     labels:
       - "com.docker.stack.namespace=staging"
       - "com.docker.stack.monitoring=true"
-    deploy:
+    deploy: &deploy-db
       resources:
         limits:
           memory: 6G
@@ -43,11 +42,6 @@ services:
     container_name: postgres_exporter_staging
     environment:
       DATA_SOURCE_NAME: "postgresql://${STAGING_DB_USER}:${STAGING_DB_PASSWORD}@postgres_staging:5432/${STAGING_DB_NAME}?sslmode=disable"
-    volumes:
-      - type: bind
-        source: ./postgres_exporter/conf
-        target: /etc/postgres_exporter/conf
-        read_only: true
     ports:
       - "9187:9187"
     restart: unless-stopped
@@ -106,11 +100,6 @@ services:
     container_name: postgres_exporter_production
     environment:
       DATA_SOURCE_NAME: "postgresql://${PROD_DB_USER}:${PROD_DB_PASSWORD}@postgres_production:5432/${PROD_DB_NAME}?sslmode=disable"
-    volumes:
-      - type: bind
-        source: ./postgres_exporter/conf
-        target: /etc/postgres_exporter/conf
-        read_only: true
     ports:
       - "9188:9187"
     restart: unless-stopped
