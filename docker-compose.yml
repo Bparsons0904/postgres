@@ -45,7 +45,7 @@ services:
       DATA_SOURCE_PASS: ${STAGING_DB_PASSWORD}
       PG_EXPORTER_EXTEND_QUERY_PATH: "/etc/postgres_exporter/queries.yaml"
     volumes:
-      - ./postgres_exporter/queries.yaml:/etc/postgres_exporter/queries.yaml:ro
+      - $PWD/postgres_exporter/queries.yaml:/etc/postgres_exporter/queries.yaml:ro
     ports:
       - "9187:9187"
     restart: unless-stopped
