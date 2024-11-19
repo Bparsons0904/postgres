@@ -6,7 +6,7 @@ services:
       dockerfile: Dockerfile
     image: custom-postgres:16.5
     container_name: postgres_staging
-    command: postgres -c 'config_file=/etc/postgresql/postgresql.conf'
+    command: postgres -c 'config_file=/var/lib/postgresql/config/postgresql.conf'
     environment:
       POSTGRES_USER: ${STAGING_DB_USER}
       POSTGRES_PASSWORD: ${STAGING_DB_PASSWORD}
@@ -15,9 +15,8 @@ services:
       POSTGRES_HOST_AUTH_METHOD: "scram-sha-256"
     volumes:
       - postgres_staging_data:/var/lib/postgresql/data
-      - ./staging/postgresql.conf:/etc/postgresql/postgresql.conf:ro
-      - ./staging/pg_hba.conf:/etc/postgresql/pg_hba.conf:ro
-      - ./init_staging.sql.template:/docker-entrypoint-initdb.d/init.sql:ro
+      - ./staging/postgresql.conf:/var/lib/postgresql/config/postgresql.conf:ro
+      - ./staging/pg_hba.conf:/var/lib/postgresql/config/pg_hba.conf:ro
     ports:
       - "5080:5432"
     restart: unless-stopped
