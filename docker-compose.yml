@@ -48,8 +48,6 @@ services:
       PG_EXPORTER_EXTEND_QUERY_PATH: "/etc/postgres_exporter/queries.yaml"
     ports:
       - "9187:9187"
-    volumes:
-      - ./postgres_exporter/queries.yaml:/etc/postgres_exporter/queries.yaml:ro
     restart: unless-stopped
     networks:
       - switch-network
