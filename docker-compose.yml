@@ -46,7 +46,7 @@ services:
       PG_EXPORTER_EXTEND_QUERY_PATH: "/etc/postgres_exporter/conf/queries.yaml"
     volumes:
       - type: bind
-        source: ./postgres_exporter_config
+        source: ./postgres_exporter/conf
         target: /etc/postgres_exporter/conf
         read_only: true
     ports:
