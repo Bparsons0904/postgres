@@ -16,13 +16,11 @@ RUN apt-get update && apt-get install -y \
   && rm -rf /var/lib/apt/lists/* \
   && rm -rf /tmp/*
 
-# Create config directory and copy configs
-RUN mkdir -p /etc/postgresql/
-COPY postgresql.conf /etc/postgresql/
-COPY pg_hba.conf /etc/postgresql/
+RUN mkdir -p /var/lib/postgresql/config/
+
+COPY postgresql.conf /var/lib/postgresql/config/
+COPY pg_hba.conf /var/lib/postgresql/config/
 COPY init-extensions.sql /docker-entrypoint-initdb.d/
 COPY init-db.sh /docker-entrypoint-initdb.d/
 
 RUN chmod +x /docker-entrypoint-initdb.d/init-db.sh
-
-CMD ["postgres", "-c", "config_file=/etc/postgresql/postgresql.conf"]

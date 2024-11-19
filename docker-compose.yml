@@ -68,6 +68,7 @@ services:
       dockerfile: Dockerfile
     image: custom-postgres:16.5
     container_name: postgres_production
+    command: postgres -c 'config_file=/var/lib/postgresql/config/postgresql.conf'
     environment:
       POSTGRES_USER: ${PROD_DB_USER}
       POSTGRES_PASSWORD: ${PROD_DB_PASSWORD}
@@ -76,9 +77,6 @@ services:
       POSTGRES_HOST_AUTH_METHOD: "scram-sha-256"
     volumes:
       - postgres_production_data:/var/lib/postgresql/data
-      - ./production/postgresql.conf:/etc/postgresql/postgresql.conf:ro
-      - ./production/pg_hba.conf:/etc/postgresql/pg_hba.conf:ro
-      - ./init_production.sql.template:/docker-entrypoint-initdb.d/init.sql:ro
     ports:
       - "5076:5432"
     restart: unless-stopped
