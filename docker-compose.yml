@@ -37,15 +37,18 @@ services:
           memory: 2G
           cpus: "2"
   postgres_exporter_staging:
-    build:
-      context: .
-      dockerfile: Dockerfile.exporter
+    image: prometheuscommunity/postgres-exporter:latest
     container_name: postgres_exporter_staging
     environment:
       DATA_SOURCE_URI: "postgres_staging:5432/${STAGING_DB_NAME}?sslmode=disable"
       DATA_SOURCE_USER: ${STAGING_DB_USER}
       DATA_SOURCE_PASS: ${STAGING_DB_PASSWORD}
-      PG_EXPORTER_EXTEND_QUERY_PATH: "/home/nobody/conf/queries.yaml"
+      PG_EXPORTER_EXTEND_QUERY_PATH: "/etc/postgres_exporter/conf/queries.yaml"
+    volumes:
+      - type: bind
+        source: ./postgres_exporter/conf
+        target: /etc/postgres_exporter/conf
+        read_only: true
     ports:
       - "9187:9187"
     restart: unless-stopped
