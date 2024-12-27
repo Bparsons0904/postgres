@@ -49,3 +49,13 @@ Database extensions are automatically initialized using the `init-extentions.sql
 ## Local Development
 
 Use `docker-compose up -d` to start the databases locally. The staging database will be available on port 5080, and the production database on port 5076.
+
+## Manual Creation
+
+```sql
+CREATE DATABASE switches OWNER waugze;
+CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
+CREATE EXTENSION IF NOT EXISTS "pg_uuidv7";
+CREATE EXTENSION IF NOT EXISTS pg_stat_statements;
+CREATE DATABASE switches_dev OWNER waugze;
+```
