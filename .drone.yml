@@ -19,7 +19,6 @@ steps:
     commands:
       - docker-compose stop postgres_staging postgres_exporter_staging
       - docker-compose rm -f postgres_staging postgres_exporter_staging
-      - docker volume rm $(docker volume ls -q | grep postgres_staging_data) || true
       - docker-compose up -d postgres_staging postgres_exporter_staging
     when:
       branch:
